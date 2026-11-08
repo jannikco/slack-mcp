@@ -5,20 +5,22 @@
   "releaseEligible": true,
   "maintainer": "jannikco",
   "license": "MIT",
-  "sourceRevision": "3edf9c44b42c330cfee81bb2ef5ee69a2fa7307a54d3e9a0d6d5b1921c6fbcad",
+  "sourceRevision": "01453beb35c13e65f5366a47c3161a105f17f15f6c6734bb8475195a874dc97a",
   "evidence": [
-    "Source-backed provider setup metadata",
-    "Offline configuration and MCP protocol tests"
+    "Actual tools/call and direct-provider request contract tests"
   ],
   "provenance": [
-    "https://raw.githubusercontent.com/slackapi/slack-api-specs/master/web-api/slack_web_openapi_v2.json"
+    "https://docs.slack.dev/reference/methods/conversations.list/"
   ],
   "id": "slack-mcp",
-  "kind": "mcp-setup",
+  "kind": "provider-connector",
   "product": "pipmcp",
-  "title": "Slack MCP setup and connection checker",
-  "description": "Generate Slack MCP client configuration, inspect available tools and validate hosted endpoint access through PipMCP.",
-  "operationIds": [],
+  "title": "Slack MCP server",
+  "description": "Identify the connected workspace and list visible conversations before choosing a notification channel.",
+  "operationIds": [
+    "test_auth",
+    "list_conversations"
+  ],
   "appSlug": "slack",
   "appName": "Slack",
   "providerDocs": "https://raw.githubusercontent.com/slackapi/slack-api-specs/master/web-api/slack_web_openapi_v2.json",
@@ -28,10 +30,227 @@
     "requiredCredentialFields": [
       "token"
     ],
+    "settings": {},
     "requiredHeaderNames": [],
     "helpUrl": "https://docs.slack.dev/authentication/tokens/",
     "tenantRequired": false,
     "accountParameterNames": []
   },
-  "attributionSlug": "github-slack-mcp"
+  "attributionSlug": "github-slack-mcp",
+  "artifactType": "connector",
+  "qualityVersion": 2,
+  "connectorId": "slack",
+  "connector": {
+    "id": "slack",
+    "name": "Slack",
+    "version": "0.2.0",
+    "baseUrl": "https://slack.com/api",
+    "auth": {
+      "type": "bearer",
+      "env": "SLACK_BOT_TOKEN"
+    },
+    "tools": [
+      {
+        "name": "test_auth",
+        "description": "Read identity and workspace associated with the Slack token.",
+        "method": "POST",
+        "path": "/auth.test",
+        "readOnly": true,
+        "inputSchema": {
+          "type": "object",
+          "properties": {},
+          "required": [],
+          "additionalProperties": false
+        },
+        "bindings": {
+          "path": [],
+          "query": {},
+          "body": {}
+        },
+        "sampleArguments": {},
+        "provenance": [
+          "https://docs.slack.dev/reference/methods/auth.test/"
+        ],
+        "contentType": "application/x-www-form-urlencoded"
+      },
+      {
+        "name": "list_conversations",
+        "description": "Read channels your bot can see; requires the corresponding conversations read scopes.",
+        "method": "GET",
+        "path": "/conversations.list",
+        "readOnly": true,
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "limit": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 999
+            },
+            "cursor": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 512,
+              "description": "Identifier"
+            },
+            "exclude_archived": {
+              "type": "boolean"
+            }
+          },
+          "required": [],
+          "additionalProperties": false
+        },
+        "bindings": {
+          "path": [],
+          "query": {
+            "limit": "limit",
+            "cursor": "cursor",
+            "exclude_archived": "exclude_archived"
+          },
+          "body": {}
+        },
+        "sampleArguments": {
+          "limit": 10,
+          "exclude_archived": true
+        },
+        "provenance": [
+          "https://docs.slack.dev/reference/methods/conversations.list/"
+        ],
+        "pagination": {
+          "type": "cursor",
+          "cursorInput": "cursor",
+          "nextCursorPath": "response_metadata.next_cursor"
+        }
+      }
+    ],
+    "workflow": {
+      "name": "Channel access audit",
+      "description": "Identify the connected workspace and list visible conversations before choosing a notification channel.",
+      "steps": [
+        "test_auth",
+        "list_conversations"
+      ]
+    },
+    "provenance": [
+      "https://docs.slack.dev/reference/methods/conversations.list/"
+    ],
+    "verification": "mock-only",
+    "providerLiveValidation": "not-run",
+    "capabilityEvidence": {
+      "local": {
+        "level": "Tested",
+        "operations": [
+          {
+            "name": "test_auth",
+            "level": "Tested",
+            "evidenceRefs": [
+              "Provider request/stdio contract tests"
+            ],
+            "method": "contract-fixture"
+          },
+          {
+            "name": "list_conversations",
+            "level": "Tested",
+            "evidenceRefs": [
+              "Provider request/stdio contract tests"
+            ],
+            "method": "contract-fixture"
+          }
+        ],
+        "evidenceRefs": [
+          "Provider request/stdio contract tests"
+        ],
+        "mode": "local"
+      },
+      "managed": {
+        "level": "Documented",
+        "operations": [
+          {
+            "name": "test_auth",
+            "level": "Documented",
+            "evidenceRefs": [],
+            "method": "documentation"
+          },
+          {
+            "name": "list_conversations",
+            "level": "Documented",
+            "evidenceRefs": [],
+            "method": "documentation"
+          }
+        ],
+        "evidenceRefs": [],
+        "mode": "managed"
+      }
+    },
+    "repoId": "slack-mcp",
+    "appSlug": "slack",
+    "product": "pipmcp",
+    "artifactType": "connector",
+    "sourceRevision": "01453beb35c13e65f5366a47c3161a105f17f15f6c6734bb8475195a874dc97a",
+    "authentication": {
+      "type": "bearer",
+      "requiredCredentialFields": [
+        "token"
+      ],
+      "settings": {},
+      "requiredHeaderNames": [],
+      "helpUrl": "https://docs.slack.dev/authentication/tokens/",
+      "tenantRequired": false,
+      "accountParameterNames": []
+    },
+    "managedAvailability": {
+      "status": "listed",
+      "checkedAt": "2026-11-08T12:29:10.433747+00:00"
+    }
+  },
+  "capabilityEvidence": {
+    "local": {
+      "level": "Tested",
+      "operations": [
+        {
+          "name": "test_auth",
+          "level": "Tested",
+          "evidenceRefs": [
+            "Provider request/stdio contract tests"
+          ],
+          "method": "contract-fixture"
+        },
+        {
+          "name": "list_conversations",
+          "level": "Tested",
+          "evidenceRefs": [
+            "Provider request/stdio contract tests"
+          ],
+          "method": "contract-fixture"
+        }
+      ],
+      "evidenceRefs": [
+        "Provider request/stdio contract tests"
+      ],
+      "mode": "local"
+    },
+    "managed": {
+      "level": "Documented",
+      "operations": [
+        {
+          "name": "test_auth",
+          "level": "Documented",
+          "evidenceRefs": [],
+          "method": "documentation"
+        },
+        {
+          "name": "list_conversations",
+          "level": "Documented",
+          "evidenceRefs": [],
+          "method": "documentation"
+        }
+      ],
+      "evidenceRefs": [],
+      "mode": "managed"
+    }
+  },
+  "utility": {
+    "problem": "Identify the connected workspace and list visible conversations before choosing a notification channel.",
+    "output": "Actual provider API results through local MCP tools"
+  }
 }
