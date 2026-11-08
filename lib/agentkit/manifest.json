@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "version": "1.0.0",
+  "product": "pipmcp",
+  "credential": "PIPMCP_API_KEY",
+  "skills": [
+    {
+      "name": "pipmcp-slack",
+      "description": "Connect AI agents to Slack using one PipMCP API key and actual hosted tool discovery."
+    }
+  ],
+  "files": {
+    "skills/pipmcp-slack/SKILL.md": "c2f3cc4fc0d51fdb739a49b21c0e3b3af9d1aee8ab3c55ba5e0f1666593512f6"
+  }
+}
