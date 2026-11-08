@@ -1,0 +1,49 @@
+{
+  "id": "slack-channel-membership-review",
+  "repositoryId": "slack-mcp",
+  "product": "pipmcp",
+  "connectorId": "slack",
+  "title": "Review Slack channel membership",
+  "promise": "Inspect visible channels and prepare a bot-membership review without joining channels or sending messages.",
+  "sourceRevision": "dfa57a8ff3f9a11215a8a79db61b5af5e0014bf8a35a9c97ada1fd9dfe2fbeb1",
+  "credential": "PIPMCP_API_KEY",
+  "transport": "pipmcp-gateway",
+  "sourceRefs": [
+    "https://raw.githubusercontent.com/slackapi/slack-api-specs/master/web-api/slack_web_openapi_v2.json"
+  ],
+  "readTask": {
+    "intent": "Inspect visible channels and prepare a bot-membership review without joining channels or sending messages.",
+    "requiredCapability": "Read-only authorized account data; discover actual names and schemas first"
+  },
+  "synthetic": {
+    "strategy": "equals",
+    "field": "botIsMember",
+    "value": false,
+    "records": [
+      {
+        "id": "synthetic-channel-s1",
+        "botIsMember": false,
+        "name": "synthetic-sales"
+      },
+      {
+        "id": "synthetic-channel-s2",
+        "botIsMember": true,
+        "name": "synthetic-support"
+      }
+    ],
+    "input": {
+      "limit": 10
+    },
+    "normalization": "Invented normalized review fields demonstrate task logic; live provider schemas and field mappings must be reviewed separately.",
+    "expectedReviewCount": 1,
+    "asOf": "2026-11-08T00:00:00Z"
+  },
+  "livePolicy": {
+    "default": "preflight-only",
+    "explicitReadSelectionRequired": true,
+    "providerWritesAllowed": false,
+    "sandboxWritesRequireSeparateApproval": true
+  },
+  "baseSourceRevision": "8db3877e22bcffaf36e3f0c870ff2530baa919f3c694583bf3c872da779e1238",
+  "releaseVersion": "1.1.0"
+}

@@ -12,7 +12,7 @@
   "maintainer": "jannikco",
   "license": "MIT",
   "attributionSlug": "github-slack-mcp",
-  "sourceRevision": "8db3877e22bcffaf36e3f0c870ff2530baa919f3c694583bf3c872da779e1238",
+  "sourceRevision": "dfa57a8ff3f9a11215a8a79db61b5af5e0014bf8a35a9c97ada1fd9dfe2fbeb1",
   "qualityVersion": 2,
   "artifactType": "connector",
   "evidence": [
@@ -30,7 +30,7 @@
   "appName": "Slack",
   "connectorId": "slack",
   "executionAuthority": "pipmcp-gateway",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "agentReady": true,
   "capabilityEvidence": {
     "local": {
